@@ -8,15 +8,30 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * Class ProductController
+ * @package App\Http\Controllers\API
+ */
 class ProductController extends Controller
 {
+    /**
+     * @var ProductRepositoryInterface
+     */
     private $productRepository;
 
+    /**
+     * ProductController constructor.
+     * @param  ProductRepositoryInterface  $productRepository
+     */
     public function __construct(ProductRepositoryInterface $productRepository)
     {
         $this->productRepository = $productRepository;
     }
 
+    /**
+     * @param  Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(Request $request)
     {
         try {
@@ -31,6 +46,7 @@ class ProductController extends Controller
                 ]);
                 if ( $validator->fails() )
                     continue;
+                // available summary fetch by $this->productRepository->store($data)->summary
                 $products[] = $this->productRepository->store($data);
             }
             DB::commit();

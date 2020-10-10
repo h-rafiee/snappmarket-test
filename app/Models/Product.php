@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Collections\ProductCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -17,6 +18,11 @@ class Product extends Model
     protected $hidden = [
         'quantity'
     ];
+
+    public function getSummaryAttribute()
+    {
+        return "{$this->title} ---> {$this->description}";
+    }
 
     public function category()
     {
