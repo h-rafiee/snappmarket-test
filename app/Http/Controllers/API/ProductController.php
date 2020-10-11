@@ -38,13 +38,7 @@ class ProductController extends Controller
             DB::beginTransaction();
             $products = [];
             foreach($request->all() as $data) {
-                $validator = Validator::make($data, [
-                    'category' => 'required',
-                    'title' => 'required',
-                    'price' => 'required|numeric',
-                    'count' => 'required|numeric'
-                ]);
-                if ( $validator->fails() )
+                if(!$this->isValidPayload($data))
                     continue;
                 // available summary fetch by $this->productRepository->store($data)->summary
                 $products[] = $this->productRepository->store($data);
@@ -55,5 +49,16 @@ class ProductController extends Controller
             DB::rollBack();
             return response()->json(['message' => $e->getMessage()]);
         }
+    }
+
+    public function isValidPayload(array $payload)
+    {
+        $validator = Validator::make($payload, [
+            'category' => 'required|string|max:191',
+            'title' => 'required|string|max:191',
+            'price' => 'required|numeric|min:0',
+            'count' => 'required|numeric|min:0'
+        ]);
+        return !$validator->fails();
     }
 }
